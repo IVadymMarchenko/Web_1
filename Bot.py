@@ -1,4 +1,41 @@
 from AddressBook import *
+from abc import ABC, abstractmethod
+
+class AbstractUserInterface(ABC):
+
+    @abstractmethod
+    def display_commands(self, commands):
+        pass
+
+    @abstractmethod
+    def display_contacts(self,contacts):
+        pass
+
+
+class ConsoleUI(AbstractUserInterface):
+    def display_contacts(self, contacts):
+        result = []
+        for account in contacts:
+            if account['birthday']:
+                birth = account['birthday'].strftime("%d/%m/%Y")
+            else:
+                birth = ''
+            if account['phones']:
+                new_value = []
+                for phone in account['phones']:
+                    if phone:
+                        new_value.append(phone)
+                phone = ', '.join(new_value)
+            else:
+                phone = ''
+            result.append(
+                "_" * 50 + "\n" + f"Name: {account['name']} \nPhones: {phone} \nBirthday: {birth} \nEmail: {account['email']} \nStatus: {account['status']} \nNote: {account['note']}\n" + "_" * 50 + '\n')
+        print('\n'.join(result))
+
+    def display_commands(self, commands):
+        format_str = str('{:%s%d}' % ('^', 20))
+        for command in commands:
+            print(format_str.format(command))
 
 
 class Bot:
